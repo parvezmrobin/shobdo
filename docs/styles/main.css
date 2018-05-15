@@ -44,8 +44,7 @@ html, body {
   height: 64px;
 }
 .mdl-demo .mdl-layout__tab-bar {
-  padding: 0;
-  padding-left: 16px;
+  padding: 0 0 0 16px;
   box-sizing: border-box;
   height: 100%;
   width: 100%;
@@ -59,8 +58,7 @@ html, body {
   height: 4px;
 }
 .mdl-demo main > .mdl-layout__tab-panel {
-  padding: 8px;
-  padding-top: 48px;
+  padding: 48px 8px 8px;
 }
 .mdl-demo .mdl-card {
   height: auto;
@@ -71,7 +69,7 @@ html, body {
   height: auto;
 }
 .mdl-demo .mdl-card .mdl-card__supporting-text {
-  margin: 40px;
+  margin: 20px 40px;
   flex-grow: 1;
   padding: 0;
   color: inherit;
@@ -83,7 +81,7 @@ html, body {
 }
 .mdl-demo .mdl-card__actions {
   margin: 0;
-  padding: 4px 40px;
+  padding: 20px 40px;
   color: inherit;
 }
 .mdl-demo .mdl-card__actions a {

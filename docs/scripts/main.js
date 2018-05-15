@@ -78,7 +78,7 @@
     const compiler = new Compiler(source);
     const compiled = compiler.compile();
 
-    console.log(compiled);
+    document.getElementById("output").innerText = compiled;
   }
 
   document.getElementById("btn-compile").addEventListener("click", compile);
