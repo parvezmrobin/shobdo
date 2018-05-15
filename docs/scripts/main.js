@@ -72,5 +72,16 @@
     });
   }
 
+  function compile() {
+    const source = document.getElementById("txt-source").value;
+
+    const compiler = new Compiler(source);
+    const compiled = compiler.compile();
+
+    console.log(compiled);
+  }
+
+  document.getElementById("btn-compile").addEventListener("click", compile);
+
   // Your custom JavaScript goes here
 })();
