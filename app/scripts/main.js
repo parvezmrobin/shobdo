@@ -92,7 +92,7 @@
 
 
   function compile() {
-    const source = document.getElementById("txt-source").value;
+    const source = document.getElementById("txt-source").innerText;
 
     const compiler = new Compiler(source);
     const compiled = compiler.compile();
