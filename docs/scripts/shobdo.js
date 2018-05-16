@@ -23,6 +23,8 @@ class Compiler {
         i = this.handleAlpha(i);
       } else if (Compiler.isNum(ch)) {
         i = this.handleNumber(i);
+      } else if (ch === '"' || ch === "'") {
+        i = this.handleString(i, this.source[i]);
       } else {
         this.output += ch;
       }
@@ -54,15 +56,15 @@ class Compiler {
       }
     }
 
-    for(; i< j; i++) {
-      this.output += (this.source.charCodeAt(i) - 2534);
+    for (; i < j; i++) {
+      this.output += (this.source[i] === '.') ? '.' : (this.source.charCodeAt(i) - 2534);
     }
 
     return j - 1; // as i will be incremented in for once
   }
 
   handleAlpha(i) {
-    let j = this.retrieveAlphaNum(i+1);
+    let j = this.retrieveAlphaNum(i + 1);
 
     const lexeme = this.source.substring(i, j);
     const isKeyword = Compiler.isKeyword(lexeme);
@@ -155,6 +157,17 @@ class Compiler {
     }
     return j;
   }
+
+  handleString(i, delimeter = '"') {
+    let j;
+    for (j = i + 1; j < this.source.length; j++) {
+      if (this.source[j] === delimeter) break;
+    }
+
+    this.output += this.source.substring(i, j + 1);
+
+    return j;
+  }
 }
 
 Compiler.keywords = {
@@ -169,5 +182,5 @@ Compiler.keywords = {
   "মিথ্যা": "false",
   "ও": "&&",
   "বা": "||",
-  "দেখাও": "console.log"
+  "দেখাও": "shobdo.util.show"
 };

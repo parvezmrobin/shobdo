@@ -72,13 +72,33 @@
     });
   }
 
+  let result;
+
+  const shobdo = {
+    util: {
+      show: function (param, separator = "\n") {
+        if (typeof param !== 'object') {
+          param = [param];
+        }
+
+        for (let i = 0; i < param.length; i++) {
+          result += (param[i] + separator);
+        }
+      }
+    }
+  };
+
+
   function compile() {
     const source = document.getElementById("txt-source").value;
 
     const compiler = new Compiler(source);
     const compiled = compiler.compile();
 
-    document.getElementById("output").innerText = compiled;
+    result = '';
+    eval(compiled);
+
+    document.getElementById("output").innerText = result;
   }
 
   document.getElementById("btn-compile").addEventListener("click", compile);
