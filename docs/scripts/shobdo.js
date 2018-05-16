@@ -182,5 +182,5 @@ Compiler.keywords = {
   "মিথ্যা": "false",
   "ও": "&&",
   "বা": "||",
-  "দেখাও": "shobdo.util.show"
+  "দেখাও": "shobdo.___.show"
 };
