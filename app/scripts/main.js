@@ -17,7 +17,7 @@
  *
  */
 /* eslint-env browser */
-(function () {
+(() => {
   'use strict';
 
   // Check to make sure service workers are supported in the current browser,
@@ -36,9 +36,9 @@
   if ('serviceWorker' in navigator &&
     (window.location.protocol === 'https:' || isLocalhost)) {
     navigator.serviceWorker.register('service-worker.js')
-      .then(function (registration) {
+      .then(registration => {
         // updatefound is fired if service-worker.js changes.
-        registration.onupdatefound = function () {
+        registration.onupdatefound = () => {
           // updatefound is also fired the very first time the SW is installed,
           // and there's no need to prompt for a reload at that point.
           // So check here to see if the page is already controlled,
@@ -48,7 +48,7 @@
             // https://slightlyoff.github.io/ServiceWorker/spec/service_worker/index.html#service-worker-container-updatefound-event
             var installingWorker = registration.installing;
 
-            installingWorker.onstatechange = function () {
+            installingWorker.onstatechange = () => {
               switch (installingWorker.state) {
                 case 'installed':
                   // At this point, the old content will have been purged and the
@@ -67,18 +67,20 @@
             };
           }
         };
-      }).catch(function (e) {
-      console.error('Error during service worker registration:', e);
-    });
+      })
+      .catch(e => {
+        console.error('Error during service worker registration:', e);
+      });
   }
 
-  let result = '', hasError = false;
+  let result = '';
+  let hasError = false;
 
   const shobdo = {
     ___: {
       result,
       hasError,
-      show: function (param, separator = "\n") {
+      show: (param, separator = '\n') => {
         if (typeof param !== 'object') {
           param = [param];
         }
@@ -90,23 +92,26 @@
     }
   };
 
-
+  /**
+   * Compile and execute Shobdo code
+   */
   function compile() {
-    const source = document.getElementById("txt-source").innerText;
+    const source = document.getElementById('txt-source').innerText;
 
+    /* global Compiler */
     const compiler = new Compiler(source);
     const compiled = compiler.compile();
 
     shobdo.___.result = '';
     shobdo.___.hasError = false;
     try {
-      eval(compiled);
+      eval(compiled); // eslint-disable-line no-eval
     } catch (e) {
       shobdo.___.hasError = true;
       if (e instanceof ReferenceError) {
         let msg = e.message;
         msg = msg.substring(0, msg.indexOf(' '));
-        const index = ((value) => {
+        const index = (value => {
           for (let i in compiler.identifiers) {
             if (compiler.identifiers[i] === value) {
               return i;
@@ -118,10 +123,24 @@
       }
     }
 
-    document.getElementById("output").innerText = shobdo.___.result;
+    document.getElementById('output').innerText = shobdo.___.result;
   }
 
-  document.getElementById("btn-compile").addEventListener("click", compile);
+  document.getElementById('btn-compile').addEventListener('click', compile);
+
+  document.getElementById('txt-source').addEventListener('keyup', el => {
+    const parent = el.currentTarget.parentElement;
+    const code = el.currentTarget.innerText;
+    const classes = parent.classList;
+    if (code.length) {
+      if (!classes.contains('is-dirty')) {
+        classes.add('is-dirty');
+      }
+    } else if (classes.contains('is-dirty')) {
+      classes.remove('is-dirty');
+    }
+    parent.classList = classes;
+  });
 
   // Your custom JavaScript goes here
 })();

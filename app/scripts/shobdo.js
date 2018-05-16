@@ -23,7 +23,7 @@ class Compiler {
         i = this.handleAlpha(i);
       } else if (Compiler.isNum(ch)) {
         i = this.handleNumber(i);
-      } else if (ch === '"' || ch === "'") {
+      } else if (ch === '"' || ch === '\'') {
         i = this.handleString(i, this.source[i]);
       } else {
         this.output += ch;
@@ -48,19 +48,26 @@ class Compiler {
   handleNumber(i) {
     let j = i + 1;
     for (; j < this.source.length; j++) {
-      if (!Compiler.isNum(this.source[j])) break;
+      if (!Compiler.isNum(this.source[j])) {
+        break;
+      }
     }
     if (this.source[j] === '.') {
       for (j++; j < this.source.length; j++) {
-        if (!Compiler.isNum(this.source[j])) break;
+        if (!Compiler.isNum(this.source[j])) {
+          break;
+        }
       }
     }
 
     for (; i < j; i++) {
-      this.output += (this.source[i] === '.') ? '.' : (this.source.charCodeAt(i) - 2534);
+      this.output += (this.source[i] === '.') ?
+        '.' :
+        (this.source.charCodeAt(i) - 2534);
     }
 
-    return j - 1; // as i will be incremented in for once
+    // as i will be incremented in for once
+    return j - 1;
   }
 
   handleAlpha(i) {
@@ -69,29 +76,29 @@ class Compiler {
     const lexeme = this.source.substring(i, j);
     const isKeyword = Compiler.isKeyword(lexeme);
     if (isKeyword) {
-      if (lexeme === "সকল") {
+      if (lexeme === 'সকল') {
         return this.handleFor(i);
       }
-      else {
-        this.output += Compiler.keywords[lexeme];
-      }
+      this.output += Compiler.keywords[lexeme];
     } else {
       const identified = this.identified(lexeme);
       if (!identified) {
-        this.identifiers[lexeme] = ("t" + this.numVar);
+        this.identifiers[lexeme] = ('t' + this.numVar);
         this.numVar++;
       }
 
       this.output += this.identifiers[lexeme];
     }
 
-    return j - 1; // as i will be incremented in for once
+    // as i will be incremented in for once
+    return j - 1;
   }
 
   retrieveAlphaNum(j) {
     for (; j < this.source.length; j++) {
-      if (!Compiler.isAlphaNum(this.source[j]))
+      if (!Compiler.isAlphaNum(this.source[j])) {
         break;
+      }
     }
     return j;
   }
@@ -105,9 +112,10 @@ class Compiler {
   }
 
   handleFor(i) {
-    let j = i + 3; // index next to "for"
+    // index next to 'for'
+    let j = i + 3;
 
-    //Retrieve list name
+    // Retrieve list name
     j = this.skipWhiteSpaces(j);
     let k = this.retrieveAlphaNum(j);
     const listName = this.source.substring(j, k);
@@ -116,8 +124,8 @@ class Compiler {
     j = this.skipWhiteSpaces(k);
     k = this.retrieveAlphaNum(j);
     const of = this.source.substring(j, k);
-    if (of !== "এরমধ্যে") {
-      throw `${this.line} এর কাছে ভুল`;
+    if (of !== 'এরমধ্যে') {
+      throw Error(`${this.line} এর কাছে ভুল`);
     }
 
     // Retrieve variable name
@@ -129,24 +137,25 @@ class Compiler {
     j = this.skipWhiteSpaces(k);
     k = this.retrieveAlphaNum(j);
     const of1 = this.source.substring(j, k);
-    if (of1 !== "এরজন্য") {
-      throw `${this.line} এর কাছে ভুল`;
+    if (of1 !== 'এরজন্য') {
+      throw Error(`${this.line} এর কাছে ভুল`);
     }
 
     const varExists = this.identified(varName);
     if (varExists) {
-      throw `${this.line} এর কাছে ভুল: ${varName} ইতিমধ্যে পরিচিত।`;
+      throw Error(`${this.line} এর কাছে ভুল: ${varName} ইতিমধ্যে পরিচিত।`);
     }
-    this.identifiers[varName] = "t" + this.numVar;
+    this.identifiers[varName] = 't' + this.numVar;
     const translatedVarName = this.identifiers[varName];
     this.numVar++;
     const listExists = this.identified(listName);
     if (!listExists) {
-      throw `${this.line} এর কাছে ভুল: ${listName} পরিচিত নয়।`;
+      throw Error(`${this.line} এর কাছে ভুল: ${listName} পরিচিত নয়।`);
     }
     const translatedListName = this.identifiers[listName];
 
-    this.output += `for (${Compiler.keywords["চলক"]} ${translatedVarName} of ${translatedListName})`;
+    this.output += `for (${Compiler.keywords['চলক']}` +
+      ` ${translatedVarName} of ${translatedListName})`;
 
     return k - 1;
   }
@@ -161,7 +170,9 @@ class Compiler {
   handleString(i, delimeter = '"') {
     let j;
     for (j = i + 1; j < this.source.length; j++) {
-      if (this.source[j] === delimeter) break;
+      if (this.source[j] === delimeter) {
+        break;
+      }
     }
 
     this.output += this.source.substring(i, j + 1);
@@ -171,16 +182,16 @@ class Compiler {
 }
 
 Compiler.keywords = {
-  "চলক": "var",
-  "যদি": "if",
-  "অথবা": "else",
-  "অথবাযদি": "else if",
-  "যতক্ষণ": "while",
-  "সকল": "for",
-  "এরজন্য": "of",
-  "সত্য": "true",
-  "মিথ্যা": "false",
-  "ও": "&&",
-  "বা": "||",
-  "দেখাও": "shobdo.___.show"
+  চলক: 'var',
+  যদি: 'if',
+  অথবা: 'else',
+  অথবাযদি: 'else if',
+  যতক্ষণ: 'while',
+  সকল: 'for',
+  এরজন্য: 'of',
+  সত্য: 'true',
+  মিথ্যা: 'false',
+  ও: '&&',
+  বা: '||',
+  দেখাও: 'shobdo.___.show'
 };
